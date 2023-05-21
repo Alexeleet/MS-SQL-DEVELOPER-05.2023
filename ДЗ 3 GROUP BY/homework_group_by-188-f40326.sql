@@ -35,7 +35,7 @@ SELECT year(InvoiceDate) AS YearInvoiceDate
 			   , month(InvoiceDate) AS MonthInoviceDate
 			   , AVG(UnitPrice) AS AvgUnitPriceInMonth
 			   , SUM(UnitPrice * Quantity) AS SumSalesInMonth
-FROM Sales.Invoices LEFT JOIN Sales.OrderLines ON Invoices.OrderID = OrderLines.OrderID
+FROM Sales.Invoices JOIN Sales.OrderLines ON Invoices.OrderID = OrderLines.OrderID
 GROUP BY year(InvoiceDate), month(InvoiceDate)
 ORDER BY YearInvoiceDate, MonthInoviceDate;
 
@@ -58,7 +58,7 @@ FROM AllDate LEFT JOIN
 			(SELECT year(InvoiceDate) AS YearInvoiceDate
 						   , month(InvoiceDate) AS MonthInoviceDate
 						   , SUM(UnitPrice * Quantity) AS SumSalesInMonth
-			FROM Sales.Invoices LEFT JOIN Sales.OrderLines ON Invoices.OrderID = OrderLines.OrderID
+			FROM Sales.Invoices JOIN Sales.OrderLines ON Invoices.OrderID = OrderLines.OrderID
 			GROUP BY year(InvoiceDate), month(InvoiceDate)
 			HAVING SUM(UnitPrice * Quantity) > 4600000) AS SalesTable ON AllDate.Year_ = SalesTable.YearInvoiceDate AND 
 																		 AllDate.Month_ = SalesTable.MonthInoviceDate
@@ -86,8 +86,8 @@ SELECT year(InvoiceDate) AS YearInvoiceDate
 			   , SUM(OrderLines.UnitPrice * Quantity) AS SumSalesInMonth
 			   , MIN(InvoiceDate) AS FirstSaleDate
 			   , SUM(Quantity) AS QuantitySale
-FROM Sales.Invoices LEFT JOIN Sales.OrderLines ON Invoices.OrderID = OrderLines.OrderID
-				    LEFT JOIN Warehouse.StockItems ON StockItems.StockItemID = OrderLines.StockItemID
+FROM Sales.Invoices  JOIN Sales.OrderLines ON Invoices.OrderID = OrderLines.OrderID
+				     JOIN Warehouse.StockItems ON StockItems.StockItemID = OrderLines.StockItemID
 GROUP BY year(InvoiceDate), month(InvoiceDate), StockItemName
 HAVING SUM(OrderLines.Quantity) < 50
 ORDER BY YearInvoiceDate, MonthInoviceDate
