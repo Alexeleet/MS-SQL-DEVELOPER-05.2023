@@ -71,8 +71,8 @@ SELECT OrderLines.OrderID
 			   WHEN MONTH(OrderDate) BETWEEN 9 AND 12 THEN 3 END AS OrderDateTercile
 		, Customers.CustomerName
 FROM Sales.Orders
-	LEFT JOIN Sales.OrderLines ON Orders.OrderID = OrderLines.OrderID
-	LEFT JOIN Sales.Customers ON Orders.CustomerID = Customers.CustomerID
+	 JOIN Sales.OrderLines ON Orders.OrderID = OrderLines.OrderID
+	 JOIN Sales.Customers ON Orders.CustomerID = Customers.CustomerID
 WHERE UnitPrice > 100 OR (Quantity > 20 AND OrderLines.PickingCompletedWhen IS NOT NULL)
 ORDER BY OrderDateQuarter, OrderDateTercile, OrderDate;
 
@@ -89,8 +89,8 @@ SELECT OrderLines.OrderID
 			   WHEN MONTH(OrderDate) BETWEEN 9 AND 12 THEN 3 END AS OrderDateTercile
 		, Customers.CustomerName
 FROM Sales.Orders
-	LEFT JOIN Sales.OrderLines ON Orders.OrderID = OrderLines.OrderID
-	LEFT JOIN Sales.Customers ON Orders.CustomerID = Customers.CustomerID
+	 JOIN Sales.OrderLines ON Orders.OrderID = OrderLines.OrderID
+	 JOIN Sales.Customers ON Orders.CustomerID = Customers.CustomerID
 WHERE UnitPrice > 100 OR (Quantity > 20 AND OrderLines.PickingCompletedWhen IS NOT NULL)
 ORDER BY OrderDateQuarter, OrderDateTercile, OrderDate
 	OFFSET (@pagenum - 1) * @pagesize ROWS FETCH NEXT @pagesize ROWS ONLY
@@ -114,9 +114,9 @@ SELECT DeliveryMethodName
 	   ,Suppliers.SupplierName
 	   ,PreferredName AS ContactPerson
 FROM Purchasing.Suppliers 
-	LEFT JOIN Purchasing.PurchaseOrders AS PO ON Suppliers.SupplierID = PO.SupplierID
-	LEFT JOIN Application.DeliveryMethods AS DM ON DM.DeliveryMethodID = PO.DeliveryMethodID
-	LEFT JOIN Application.People ON People.PersonID = PO.ContactPersonID
+	 JOIN Purchasing.PurchaseOrders AS PO ON Suppliers.SupplierID = PO.SupplierID
+	 JOIN Application.DeliveryMethods AS DM ON DM.DeliveryMethodID = PO.DeliveryMethodID
+	 JOIN Application.People ON People.PersonID = PO.ContactPersonID
 WHERE ExpectedDeliveryDate BETWEEN '2013-01-01' AND '2013-01-31' AND DM.DeliveryMethodName IN ('Air Freight' 
 	,'Refrigerated Air Freight') AND IsOrderFinalized = 1;
 
@@ -130,8 +130,8 @@ WHERE ExpectedDeliveryDate BETWEEN '2013-01-01' AND '2013-01-31' AND DM.Delivery
 SELECT  TOP(10) ContactPerson.PreferredName AS [Имя_клиента] 
 	   ,SalesPerson.PreferredName AS [Имя_сотрудника]  
 FROM Sales.Orders
-	 LEFT JOIN Application.People AS SalesPerson ON SalesPerson.PersonID = Orders.SalespersonPersonId
-	 LEFT JOIN Application.People AS ContactPerson ON ContactPerson.PersonID = Orders.ContactPersonID
+	  JOIN Application.People AS SalesPerson ON SalesPerson.PersonID = Orders.SalespersonPersonId
+	  JOIN Application.People AS ContactPerson ON ContactPerson.PersonID = Orders.ContactPersonID
 ORDER BY OrderDate DESC;
 
 
@@ -145,7 +145,7 @@ SELECT ContactPersonID
        , People.PreferredName
 	   , People.PhoneNumber
 FROM Sales.Orders 
-	 LEFT JOIN Sales.OrderLines ON OrderLines.OrderID = Orders.OrderID
-	 LEFT JOIN Warehouse.StockItems ON StockItems.StockItemID = OrderLines.StockItemID
-	 LEFT JOIN Application.People ON Orders.ContactPersonID = People.PersonID
+	  JOIN Sales.OrderLines ON OrderLines.OrderID = Orders.OrderID
+	  JOIN Warehouse.StockItems ON StockItems.StockItemID = OrderLines.StockItemID
+	  JOIN Application.People ON Orders.ContactPersonID = People.PersonID
 WHERE StockItems.StockItemName = 'Chocolate frogs 250g'
