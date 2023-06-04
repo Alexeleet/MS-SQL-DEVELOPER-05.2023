@@ -56,16 +56,16 @@ WHERE UnitPrice = MinPrice;
 Представьте несколько способов (в том числе с CTE). */
 -- через подзапрос
 SELECT * 
-FROM Application.People
-WHERE PersonID IN (SELECT TOP 5 ContactPersonID
+FROM Sales.Customers
+WHERE CustomerId IN (SELECT TOP 5 Invoices.CustomerID
 					FROM Sales.CustomerTransactions JOIN Sales.Invoices ON Invoices.InvoiceID = CustomerTransactions.InvoiceID 
 					ORDER BY TransactionAmount DESC);
 -- через CTE
-WITH TOPCTE AS (SELECT TOP 5 ContactPersonID
+WITH TOPCTE AS (SELECT TOP 5 Invoices.CustomerID
 					FROM Sales.CustomerTransactions JOIN Sales.Invoices ON Invoices.InvoiceID = CustomerTransactions.InvoiceID 
 					ORDER BY TransactionAmount DESC)
-SELECT People.* 
-FROM Application.People JOIN TOPCTE ON People.PersonID = TOPCTE.ContactPersonID
+SELECT Customers.* 
+FROM Sales.Customers JOIN TOPCTE ON Customers.CustomerID = TOPCTE.CustomerID
 
 
 /* Выберите города (ид и название), в которые были доставлены товары, входящие в тройку самых дорогих товаров, а также имя сотрудника,
