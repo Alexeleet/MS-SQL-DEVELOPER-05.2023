@@ -168,32 +168,7 @@ FROM Warehouse.StockItems
 */
 
 
-
-
-DECLARE @index as int = 0
-		, @flag as bit = 1;
-DECLARE @result_table TABLE (StockItemID int, StockItemName varchar(100))
-WHILE @flag = 1
-BEGIN
-	IF (SELECT SUM(JSON_PATH_EXISTS(CustomFields, CONCAT('$.Tags[', @index,']'))) FROM Warehouse.StockItems) > 0
-		BEGIN
-			INSERT INTO @result_table
-			SELECT StockItemID
-			  , StockItemName
-			FROM Warehouse.StockItems
-			where JSON_VALUE(CustomFields, CONCAT('$.Tags[', @index,']')) = 'Vintage'
-
-			SET @index += 1
-		END
-   ELSE 
-		BEGIN
-			SET @flag = 0
-		END 
-END
-SELECT * FROM @result_table;
-
-	
-
-
-
-
+SELECT StockItemID, StockItemName
+FROM Warehouse.StockItems
+CROSS APPLY OPENJSON (CustomFields, '$.Tags') as CustomField
+WHERE CustomField.[Value] = 'Vintage'
